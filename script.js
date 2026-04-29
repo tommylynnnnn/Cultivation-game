@@ -1,186 +1,90 @@
-// =========================
-// GAME STATE
-// =========================
-let game = {
-  qi: 0,
-  qps: 0,
-  pills: 0,
-  realmIndex: 0,
-  insights: 0,
+// --- GAME DATA ---
 
-  realms: [
-    { name: "Mortal", req: 100, success: 1.00, bonus: 1 },
-    { name: "Qi Condensation", req: 500, success: 0.85, bonus: 2 },
-    { name: "Foundation Establishment", req: 2000, success: 0.70, bonus: 3 },
-    { name: "Core Formation", req: 10000, success: 0.55, bonus: 5 },
-    { name: "Nascent Soul", req: 50000, success: 0.40, bonus: 8 },
-    { name: "Soul Transformation", req: 200000, success: 0.30, bonus: 12 },
-    { name: "Ascension", req: 1000000, success: 0.20, bonus: 20 }
-  ],
+const scenes = {
+  start: {
+    text: "You wake up in a dark forest. Two paths lie ahead.",
+    choices: [
+      { text: "Take the left path", next: "leftPath" },
+      { text: "Take the right path", next: "rightPath" }
+    ]
+  },
 
-  techniques: [
-    { name: "Basic Breathing", cost: 50, qps: 1, bought: false },
-    { name: "Qi Circulation", cost: 200, qps: 5, bought: false },
-    { name: "Meridian Expansion", cost: 1000, qps: 20, bought: false },
-    { name: "Golden Core Manual", cost: 5000, qps: 100, bought: false }
-  ]
+  leftPath: {
+    text: "The left path leads to a quiet river. The water glows faintly.",
+    choices: [
+      { text: "Drink the water", next: "drinkWater" },
+      { text: "Follow the river", next: "followRiver" }
+    ]
+  },
+
+  rightPath: {
+    text: "The right path leads to an abandoned cabin. The door is slightly open.",
+    choices: [
+      { text: "Enter the cabin", next: "cabin" },
+      { text: "Walk past it", next: "pastCabin" }
+    ]
+  },
+
+  drinkWater: {
+    text: "The glowing water gives you strange visions. You feel powerful.",
+    choices: [
+      { text: "Continue", next: "start" }
+    ]
+  },
+
+  followRiver: {
+    text: "You follow the river until it disappears underground.",
+    choices: [
+      { text: "Go back", next: "start" }
+    ]
+  },
+
+  cabin: {
+    text: "Inside the cabin, you find a dusty journal and a locked chest.",
+    choices: [
+      { text: "Read the journal", next: "journal" },
+      { text: "Try to open the chest", next: "chest" }
+    ]
+  },
+
+  pastCabin: {
+    text: "You walk past the cabin and vanish into the mist. Your adventure ends.",
+    choices: [
+      { text: "Restart", next: "start" }
+    ]
+  },
+
+  journal: {
+    text: "The journal speaks of a hidden treasure beneath the forest.",
+    choices: [
+      { text: "Search for treasure", next: "start" }
+    ]
+  },
+
+  chest: {
+    text: "The chest is locked tight. You need a key.",
+    choices: [
+      { text: "Go back", next: "cabin" }
+    ]
+  }
 };
 
-// =========================
-// UI UPDATE
-// =========================
-function updateUI() {
-  document.getElementById("qi").textContent = Math.floor(game.qi);
-  document.getElementById("qps").textContent = game.qps;
-  document.getElementById("realm").textContent = game.realms[game.realmIndex].name;
-  document.getElementById("insights").textContent = game.insights;
-  document.getElementById("pills").textContent = game.pills;
-}
+// --- ENGINE ---
 
-// =========================
-// MEDITATION
-// =========================
-document.getElementById("meditateBtn").onclick = () => {
-  game.qi += 1 + game.insights;
-  updateUI();
-  spawnQiBurst();
-};
+function showScene(name) {
+  const scene = scenes[name];
+  document.getElementById("story").textContent = scene.text;
 
-function spawnQiBurst() {
-  const burst = document.createElement("div");
-  burst.classList.add("qiBurst");
-  document.body.appendChild(burst);
+  const choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = "";
 
-  setTimeout(() => burst.remove(), 600);
-}
-
-
-// =========================
-// PASSIVE GENERATION
-// =========================
-setInterval(() => {
-  game.qi += game.qps;
-  updateUI();
-  saveGame();
-}, 1000);
-
-// =========================
-// TECHNIQUES
-// =========================
-function loadTechniques() {
-  const container = document.getElementById("techniques");
-  container.innerHTML = "";
-
-  game.techniques.forEach((t, i) => {
-    if (!t.bought) {
-      const btn = document.createElement("button");
-      btn.textContent = `${t.name} — Cost: ${t.cost} Qi (+${t.qps}/s)`;
-      btn.onclick = () => buyTechnique(i);
-      container.appendChild(btn);
-    }
+  scene.choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.textContent = choice.text;
+    btn.onclick = () => showScene(choice.next);
+    choicesDiv.appendChild(btn);
   });
 }
 
-function buyTechnique(i) {
-  const t = game.techniques[i];
-  if (game.qi >= t.cost) {
-    game.qi -= t.cost;
-    game.qps += t.qps;
-    t.bought = true;
-    loadTechniques();
-    updateUI();
-  }
-}
-
-// =========================
-// BREAKTHROUGH
-// =========================
-document.getElementById("breakBtn").onclick = () => {
-  const realm = game.realms[game.realmIndex];
-  const msg = document.getElementById("breakMsg");
-
-  // Add aura glow during attempt
-  document.body.classList.add("aura");
-
-  setTimeout(() => {
-    document.body.classList.remove("aura");
-
-    const roll = Math.random();
-    if (roll <= realm.success) {
-      // SUCCESS — lightning flash
-      const flash = document.getElementById("lightning");
-      flash.style.animation = "lightningFlash 0.6s";
-
-      setTimeout(() => flash.style.animation = "none", 600);
-
-      game.realmIndex++;
-      game.qps *= realm.bonus;
-      msg.textContent = `Breakthrough successful! You reached ${game.realms[game.realmIndex].name}.`;
-    } else {
-      // FAILURE — screen shake
-      document.body.classList.add("shake");
-      setTimeout(() => document.body.classList.remove("shake"), 400);
-
-      msg.textContent = "Breakthrough failed! Qi backlash!";
-      game.qi *= 0.5;
-    }
-
-    updateUI();
-  }, 800); // aura duration
-};
-
-// =========================
-// ALCHEMY
-// =========================
-document.getElementById("pillBtn").onclick = () => {
-  if (game.qi >= 100) {
-    game.qi -= 100;
-    game.pills++;
-    updateUI();
-  }
-};
-
-// =========================
-// REBIRTH
-// =========================
-document.getElementById("rebirthBtn").onclick = () => {
-  if (game.realmIndex < 2) {
-    document.getElementById("rebirthMsg").textContent =
-      "You must reach at least Foundation Establishment to reincarnate.";
-    return;
-  }
-
-  const gained = Math.floor(game.realmIndex * 2 + game.pills);
-  game.insights += gained;
-
-  // Reset everything except insights
-  game.qi = 0;
-  game.qps = 0;
-  game.pills = 0;
-  game.realmIndex = 0;
-  game.techniques.forEach(t => t.bought = false);
-
-  loadTechniques();
-  updateUI();
-
-  document.getElementById("rebirthMsg").textContent =
-    `You reincarnated and gained ${gained} Dao Insights.`;
-};
-
-// =========================
-// SAVE SYSTEM
-// =========================
-function saveGame() {
-  localStorage.setItem("cultivationSave", JSON.stringify(game));
-}
-
-function loadGame() {
-  const data = localStorage.getItem("cultivationSave");
-  if (data) {
-    game = JSON.parse(data);
-  }
-  loadTechniques();
-  updateUI();
-}
-
-loadGame();
+// Start the game
+showScene("start");
