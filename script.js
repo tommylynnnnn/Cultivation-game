@@ -43,7 +43,17 @@ function updateUI() {
 document.getElementById("meditateBtn").onclick = () => {
   game.qi += 1 + game.insights;
   updateUI();
+  spawnQiBurst();
 };
+
+function spawnQiBurst() {
+  const burst = document.createElement("div");
+  burst.classList.add("qiBurst");
+  document.body.appendChild(burst);
+
+  setTimeout(() => burst.remove(), 600);
+}
+
 
 // =========================
 // PASSIVE GENERATION
@@ -89,22 +99,34 @@ document.getElementById("breakBtn").onclick = () => {
   const realm = game.realms[game.realmIndex];
   const msg = document.getElementById("breakMsg");
 
-  if (game.qi < realm.req) {
-    msg.textContent = "Not enough Qi to attempt breakthrough.";
-    return;
-  }
+  // Add aura glow during attempt
+  document.body.classList.add("aura");
 
-  const roll = Math.random();
-  if (roll <= realm.success) {
-    game.realmIndex++;
-    game.qps *= realm.bonus;
-    msg.textContent = `Breakthrough successful! You reached ${game.realms[game.realmIndex].name}.`;
-  } else {
-    msg.textContent = "Breakthrough failed! Qi backlash!";
-    game.qi *= 0.5;
-  }
+  setTimeout(() => {
+    document.body.classList.remove("aura");
 
-  updateUI();
+    const roll = Math.random();
+    if (roll <= realm.success) {
+      // SUCCESS — lightning flash
+      const flash = document.getElementById("lightning");
+      flash.style.animation = "lightningFlash 0.6s";
+
+      setTimeout(() => flash.style.animation = "none", 600);
+
+      game.realmIndex++;
+      game.qps *= realm.bonus;
+      msg.textContent = `Breakthrough successful! You reached ${game.realms[game.realmIndex].name}.`;
+    } else {
+      // FAILURE — screen shake
+      document.body.classList.add("shake");
+      setTimeout(() => document.body.classList.remove("shake"), 400);
+
+      msg.textContent = "Breakthrough failed! Qi backlash!";
+      game.qi *= 0.5;
+    }
+
+    updateUI();
+  }, 800); // aura duration
 };
 
 // =========================
