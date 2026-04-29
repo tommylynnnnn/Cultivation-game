@@ -1,90 +1,25 @@
 body {
-  background: #0a0f1a;
-  color: #d6e2ff;
-  font-family: "Trebuchet MS", sans-serif;
-  text-align: center;
-  padding: 20px;
+  background: #111;
+  color: #eee;
+  font-family: "Courier New", monospace;
+  padding: 40px;
+}
+
+#game {
+  max-width: 600px;
+  margin: auto;
 }
 
 button {
-  background: #1a2333;
-  color: #d6e2ff;
-  border: 2px solid #4a6cff;
+  background: #222;
+  color: #eee;
+  border: 1px solid #555;
   padding: 10px 20px;
-  margin: 10px;
+  margin: 10px 0;
+  width: 100%;
   cursor: pointer;
-  border-radius: 6px;
 }
 
 button:hover {
-  background: #4a6cff;
-}
-
-h1, h2 {
-  color: #8ab4ff;
-}
-
-#techniques button {
-  display: block;
-  margin: 8px auto;
-}
-
-@keyframes auraGlow {
-  0% { box-shadow: 0 0 10px #4a6cff; }
-  50% { box-shadow: 0 0 25px #8ab4ff; }
-  100% { box-shadow: 0 0 10px #4a6cff; }
-}
-
-.aura {
-  animation: auraGlow 1.2s ease-in-out infinite;
-}
-
-@keyframes lightningFlash {
-  0% { opacity: 0; }
-  20% { opacity: 1; }
-  40% { opacity: 0; }
-  60% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-#lightning {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: white;
-  opacity: 0;
-  pointer-events: none;
-  animation: none;
-}
-
-@keyframes shake {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(5px, -5px); }
-  50% { transform: translate(-5px, 5px); }
-  75% { transform: translate(5px, 5px); }
-  100% { transform: translate(0, 0); }
-}
-
-.shake {
-  animation: shake 0.4s;
-}
-
-@keyframes qiSwirl {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(2); opacity: 0; }
-}
-
-.qiBurst {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  background: #8ab4ff;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: qiSwirl 0.6s ease-out forwards;
-  pointer-events: none;
+  background: #333;
 }
