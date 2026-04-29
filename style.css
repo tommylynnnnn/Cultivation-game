@@ -1,1 +1,30 @@
+body {
+  background: #0a0f1a;
+  color: #d6e2ff;
+  font-family: "Trebuchet MS", sans-serif;
+  text-align: center;
+  padding: 20px;
+}
 
+button {
+  background: #1a2333;
+  color: #d6e2ff;
+  border: 2px solid #4a6cff;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+button:hover {
+  background: #4a6cff;
+}
+
+h1, h2 {
+  color: #8ab4ff;
+}
+
+#techniques button {
+  display: block;
+  margin: 8px auto;
+}
