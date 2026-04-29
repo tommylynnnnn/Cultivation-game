@@ -1,39 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Cultivation Idle</title>
+  <title>Text Adventure</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <h1>Cultivation Idle</h1>
-
-  <div id="stats">
-    <p><strong>Qi:</strong> <span id="qi">0</span></p>
-    <p><strong>Qi / sec:</strong> <span id="qps">0</span></p>
-    <p><strong>Realm:</strong> <span id="realm">Mortal</span></p>
-    <p><strong>Dao Insights:</strong> <span id="insights">0</span></p>
+  <div id="game">
+    <h1>Text Adventure</h1>
+    <p id="story"></p>
+    <div id="choices"></div>
   </div>
 
-  <button id="meditateBtn">Meditate (+1 Qi)</button>
-
-  <h2>Techniques</h2>
-  <div id="techniques"></div>
-
-  <h2>Breakthrough</h2>
-  <button id="breakBtn">Attempt Breakthrough</button>
-  <p id="breakMsg"></p>
-
-  <h2>Alchemy</h2>
-  <button id="pillBtn">Refine Qi Pill (100 Qi)</button>
-  <p><strong>Pills:</strong> <span id="pills">0</span></p>
-
-  <h2>Rebirth</h2>
-  <button id="rebirthBtn">Reincarnate</button>
-  <p id="rebirthMsg"></p>
-
-  <script src="script.js"></script>
-  <div id="lightning"></div>
+  <script src="game.js"></script>
 </body>
 </html>
